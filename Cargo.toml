@@ -10,6 +10,7 @@ clap = "2.33"
 regex = "1"
 walkdir = "2"
 sys-info = "0.9"
+text-colorizer = "1"
 
 [dev-dependencies]
 assert_cmd = "1"

@@ -3,6 +3,7 @@ use regex::{Regex, RegexBuilder};
 use std::error::Error;
 use std::fs::{self, File};
 use std::io::{self, BufRead, BufReader};
+use text_colorizer::*;
 use walkdir::WalkDir;
 
 type MyResult<T> = Result<T, Box<dyn Error>>;
@@ -226,7 +227,27 @@ pub fn run(config: Config) -> MyResult<()> {
                             print(&filename, &format!("{}\n", &matches.len()));
                         } else {
                             for line in &matches {
-                                print(&filename, line);
+                                if !config.invert_match {
+                                    let mut new_line = line.clone();
+                                    let mat = config.pattern.find(&new_line).unwrap();
+                                    let (init, _) = (mat.start(), ());
+                                    let mut colored_text = new_line.split_off(init);
+                                    let mat = config.pattern.find(&colored_text).unwrap();
+                                    let (_, end) = (mat.start(), mat.end());
+                                    let remainder = colored_text.split_off(end);
+
+                                    if num_files > &1 {
+                                        print!("{}: ", filename);
+                                    }
+                                    print!(
+                                        "{}{}{}",
+                                        new_line,
+                                        colored_text.as_str().green(),
+                                        remainder
+                                    );
+                                } else {
+                                    print(&filename, line);
+                                }
                             }
                         }
                     }
