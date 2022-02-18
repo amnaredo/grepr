@@ -234,14 +234,12 @@ pub fn run(config: Config) -> MyResult<()> {
                                     if num_files > &1 {
                                         print!("{}: ", filename);
                                     }
-                                    unsafe {
-                                        print!(
-                                            "{}{}{}",
-                                            line.get_unchecked(..init),
-                                            line.get_unchecked(init..end).green(),
-                                            line.get_unchecked(end..)
-                                        );
-                                    };
+                                    print!(
+                                        "{}{}{}",
+                                        &line[..init],
+                                        &line[init..end].green(),
+                                        &line[end..]
+                                    );
                                 } else {
                                     print(&filename, line);
                                 }
